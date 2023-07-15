@@ -94,6 +94,20 @@ management:
           autotime:
             enabled: true
 
+cloud:
+  aws:
+    credentials:
+      access-key: AKIATVHTSMWWXSQUQAPS
+      secret-key: 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
+    region:
+      static: us-east-2
+    stack:
+      auto: false
+
+application:
+  bucketName: heros-images
+  baseUrl: https://heros-images.s3.us-east-2.amazonaws.com/
+
 spring:
   application:
     name: microservicio
@@ -180,6 +194,9 @@ info:
 # ===================================================================
 
 jhipster:
+  cache:
+    redis:
+      expiration: 5
   clientApp:
     name: 'microservicioApp'
   # By default CORS is disabled. Uncomment to enable.

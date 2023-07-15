@@ -25,7 +25,11 @@ import org.springframework.security.oauth2.jwt.JwsHeader;
 import org.springframework.security.oauth2.jwt.JwtClaimsSet;
 import org.springframework.security.oauth2.jwt.JwtEncoder;
 import org.springframework.security.oauth2.jwt.JwtEncoderParameters;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 /**
  * Controller to authenticate users.
@@ -77,6 +81,21 @@ public class AuthenticateController {
         log.debug("REST request to check if the current user is authenticated");
         return request.getRemoteUser();
     }
+
+    //    @PostMapping("/register")
+    //	public ResponseEntity<String> register(@RequestBody RegisterDTO registerDTO) {
+    //
+    //		if (userRepository.existsByUsername(registerDTO.username())) {
+    //			return new ResponseEntity<>("User alredy exists", HttpStatus.BAD_REQUEST);
+    //		}
+    //		UserEntity user = new UserEntity();
+    //		user.setUsername(registerDTO.username());
+    //		user.setPassword(passwordEncoder.encode(registerDTO.password()));
+    //		Role role = roleRepository.findByName("USER").get();
+    //		user.setRoles(Collections.singletonList(role));
+    //		userRepository.save(user);
+    //		return new ResponseEntity<>("Successfully registered", HttpStatus.OK);
+    //	}
 
     public String createToken(Authentication authentication, boolean rememberMe) {
         String authorities = authentication.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.joining(" "));

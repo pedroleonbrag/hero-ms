@@ -3,8 +3,11 @@ package com.pedroleon.app.service.impl;
 import com.pedroleon.app.domain.Hero;
 import com.pedroleon.app.repository.HeroRepository;
 import com.pedroleon.app.service.HeroService;
+import com.pedroleon.app.web.rest.filters.HeroFilter;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -14,7 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class HeroServiceImpl implements HeroService {
 
-    //private final Logger log = LoggerFactory.getLogger(HeroServiceImpl.class);
+    // private final Logger log = LoggerFactory.getLogger(HeroServiceImpl.class);
 
     private final HeroRepository heroRepository;
 
@@ -33,30 +36,11 @@ public class HeroServiceImpl implements HeroService {
     }
 
     @Override
-    public Optional<Hero> partialUpdate(Hero hero) {
-        // TODO Auto-generated method stub
-        return heroRepository
-            .findById(hero.getId())
-            .map(existingHero -> {
-                if (hero.getName() != null) {
-                    existingHero.setName(hero.getName());
-                }
-                if (hero.getSlug() != null) {
-                    existingHero.setSlug(hero.getSlug());
-                }
-                return existingHero;
-            })
-            .map(heroRepository::save);
-    }
-
-    @Override
-    @Transactional(readOnly = true)
     public Page<Hero> findAll(Pageable pageable) {
         return heroRepository.findAll(pageable);
     }
 
     @Override
-    @Transactional(readOnly = true)
     public Optional<Hero> findOne(Long id) {
         return heroRepository.findById(id);
     }
@@ -72,7 +56,35 @@ public class HeroServiceImpl implements HeroService {
     }
 
     @Override
+    @Cacheable("findAll")
     public List<Hero> findAll() {
         return heroRepository.findAll();
+    }
+
+    @Override
+    public Optional<Hero> partialUpdate(Hero hero) {
+        return Optional.empty();
+    }
+
+    public List<Hero> filter(List<Hero> heroes, HeroFilter filter) {
+        if (filter == null) return heroes;
+        if (filter.getName() != null && !"".equals(filter.getName().trim())) {
+            heroes =
+                heroes
+                    .stream()
+                    .filter(hero -> hero.getName().toLowerCase().contains(filter.getName().toLowerCase()))
+                    .collect(Collectors.toList());
+        }
+        if (filter.getRace() != null && !"".equals(filter.getRace().trim())) {
+            heroes = heroes.stream().filter(hero -> hero.getAppearance().getRace().contains(filter.getRace())).collect(Collectors.toList());
+        }
+        if (filter.getAlignment() != null) {
+            heroes =
+                heroes
+                    .stream()
+                    .filter(hero -> hero.getBiography().getAlignment().equals(filter.getAlignment()))
+                    .collect(Collectors.toList());
+        }
+        return heroes;
     }
 }

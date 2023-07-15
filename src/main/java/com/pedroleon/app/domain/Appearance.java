@@ -2,6 +2,8 @@ package com.pedroleon.app.domain;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -28,7 +30,9 @@ public class Appearance implements Serializable {
     @Column(name = "id")
     private Long id;
 
-    private String gender;
+    @Enumerated(EnumType.STRING)
+    private EGender gender;
+
     private String race;
     private String height;
     private String weight;

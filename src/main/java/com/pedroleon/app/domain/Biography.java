@@ -2,6 +2,8 @@ package com.pedroleon.app.domain;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -34,5 +36,7 @@ public class Biography implements Serializable {
     private String placeOfBirth;
     private String firstAppearance;
     private String publisher;
-    private String alignment;
+
+    @Enumerated(EnumType.STRING)
+    private EAlignment alignment;
 }

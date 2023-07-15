@@ -90,6 +90,9 @@ server:
 # ===================================================================
 
 jhipster:
+  cache:
+    redis:
+      expiration: 5
   http:
     cache: # Used by the CachingHttpHeadersFilter
       timeToLiveInDays: 1461

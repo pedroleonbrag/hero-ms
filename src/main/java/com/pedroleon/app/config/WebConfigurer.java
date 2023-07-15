@@ -14,6 +14,8 @@ import org.springframework.util.CollectionUtils;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import tech.jhipster.config.JHipsterProperties;
 
 /**
@@ -55,4 +57,19 @@ public class WebConfigurer implements ServletContextInitializer {
         }
         return new CorsFilter(source);
     }
+    //    @Bean
+    //	public WebMvcConfigurer corsConfigurer() {
+    //		return new WebMvcConfigurer() {
+    //			@Override
+    //			public void addCorsMappings(CorsRegistry registry) {
+    //				registry
+    //					.addMapping("/api/**")
+    //					.allowedMethods("*")
+    //					//.exposedHeaders("Authorization,Link,X-Total-Count")
+    //					//.allowCredentials(true)
+    //					.maxAge(1800)
+    //					.allowedOrigins("*");
+    //			}
+    //		};
+    //	}
 }
