@@ -19,7 +19,7 @@
 spring:
   config:
     activate:
-      on-profile: '!api-docs'
+      on-profile: ''
 springdoc:
   api-docs:
     enabled: false
@@ -119,7 +119,6 @@ spring:
     group:
       dev:
         - dev
-        - api-docs
         # Uncomment to activate TLS for the dev profile
         #- tls
   jmx:
@@ -209,18 +208,6 @@ jhipster:
   #   max-age: 1800
   mail:
     from: microservicio@localhost
-  api-docs:
-    default-include-pattern: ${server.servlet.context-path:}/api/**
-    management-include-pattern: ${server.servlet.context-path:}/management/**
-    title: Microservicio API
-    description: Microservicio API documentation
-    version: 0.0.1
-    terms-of-service-url:
-    contact-name:
-    contact-url:
-    contact-email:
-    license: unlicensed
-    license-url:
   security:
 # ===================================================================
 # Application specific properties
