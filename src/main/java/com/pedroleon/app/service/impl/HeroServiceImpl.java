@@ -4,12 +4,19 @@ import com.pedroleon.app.domain.Hero;
 import com.pedroleon.app.repository.HeroRepository;
 import com.pedroleon.app.service.HeroService;
 import com.pedroleon.app.web.rest.filters.HeroFilter;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.TypedQuery;
+import jakarta.persistence.criteria.CriteriaBuilder;
+import jakarta.persistence.criteria.CriteriaQuery;
+import jakarta.persistence.criteria.JoinType;
+import jakarta.persistence.criteria.Root;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.JpaContext;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -20,9 +27,11 @@ public class HeroServiceImpl implements HeroService {
     // private final Logger log = LoggerFactory.getLogger(HeroServiceImpl.class);
 
     private final HeroRepository heroRepository;
+    private final JpaContext jpaContext;
 
-    public HeroServiceImpl(HeroRepository heroRepository) {
+    public HeroServiceImpl(HeroRepository heroRepository, JpaContext jpaContext) {
         this.heroRepository = heroRepository;
+        this.jpaContext = jpaContext;
     }
 
     @Override
@@ -58,7 +67,21 @@ public class HeroServiceImpl implements HeroService {
     @Override
     @Cacheable("findAll")
     public List<Hero> findAll() {
-        return heroRepository.findAll();
+        EntityManager entityManager = jpaContext.getEntityManagerByManagedType(Hero.class);
+        CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+
+        CriteriaQuery<Hero> query = cb.createQuery(Hero.class);
+        Root<Hero> heroRoot = query.from(Hero.class);
+        heroRoot.fetch("powerstats", JoinType.INNER); // Perform a left join on the 'team' attribute
+        heroRoot.fetch("appearance", JoinType.INNER); // Perform a left join on the 'team' attribute
+        heroRoot.fetch("biography", JoinType.INNER); // Perform a left join on the 'team' attribute
+        heroRoot.fetch("work", JoinType.INNER); // Perform a left join on the 'team' attribute
+        heroRoot.fetch("images", JoinType.INNER); // Perform a left join on the 'team' attribute
+
+        query.select(heroRoot);
+
+        TypedQuery<Hero> typedQuery = entityManager.createQuery(query);
+        return typedQuery.getResultList();
     }
 
     @Override

@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/api")
-public class TeamResouce {
+public class TeamController {
 
     private UserService userService;
 
@@ -28,7 +28,7 @@ public class TeamResouce {
     private ModelMapper modelMapper;
 
     @Autowired
-    public TeamResouce(UserService userService) {
+    public TeamController(UserService userService) {
         this.userService = userService;
     }
 

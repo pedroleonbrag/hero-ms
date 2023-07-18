@@ -1,8 +1,10 @@
 package com.pedroleon.app.config;
 
 import java.time.Duration;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.EnableCaching;
+import org.springframework.cache.support.NoOpCacheManager;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.cache.RedisCacheConfiguration;
@@ -15,6 +17,9 @@ import tech.jhipster.config.JHipsterProperties;
 @EnableCaching
 public class CacheConfiguration {
 
+    @Autowired
+    private ApplicationProperties applicationProperties;
+
     private final JHipsterProperties jHipsterProperties;
 
     public CacheConfiguration(JHipsterProperties jHipsterProperties) {
@@ -23,6 +28,10 @@ public class CacheConfiguration {
 
     @Bean
     public CacheManager cacheManager(RedisConnectionFactory connectionFactory) {
+        if (!this.applicationProperties.isCacheEnabled()) {
+            return new NoOpCacheManager();
+        }
+
         RedisCacheWriter redisCacheWriter = RedisCacheWriter.lockingRedisCacheWriter(connectionFactory);
 
         RedisCacheConfiguration cacheConfiguration = RedisCacheConfiguration

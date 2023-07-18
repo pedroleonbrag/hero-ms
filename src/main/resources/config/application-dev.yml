@@ -35,6 +35,9 @@ spring:
     url: jdbc:mysql://localhost:3306/microservicio?useUnicode=true&characterEncoding=utf8&useSSL=false&useLegacyDatetimeCode=false&serverTimezone=UTC&createDatabaseIfNotExist=true
     username: root
     password: Burbuja$/
+    #url: jdbc:mysql://hero-ms.cet7cdyghf5u.us-east-2.rds.amazonaws.com:3306/hero-ms-db?useUnicode=true&characterEncoding=utf8&useSSL=false&useLegacyDatetimeCode=false&serverTimezone=UTC&createDatabaseIfNotExist=true
+    #username: root
+    #password: Lettuce$
     hikari:
       poolName: Hikari
       auto-commit: false
@@ -55,11 +58,6 @@ spring:
       ddl-auto: update
       show-sql: true
       format-sql: true
-  liquibase:
-    # Remove 'faker' if you do not want the sample data to be loaded automatically
-    contexts: dev, faker
-  messages:
-    cache-duration: PT1S # 1 second, see the ISO 8601 standard
   thymeleaf:
     cache: false
   redis:
@@ -73,11 +71,8 @@ spring:
 server:
   port: 8080
 
-# ===================================================================
-# JHipster specific properties
-#
-# Full reference is available at: https://www.jhipster.tech/common-application-properties/
-# ===================================================================
+application:
+  cacheEnabled: false
 
 jhipster:
   cache:

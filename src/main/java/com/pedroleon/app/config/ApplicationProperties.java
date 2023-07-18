@@ -7,6 +7,7 @@ public class ApplicationProperties {
 
     private String bucketName;
     private String baseUrl;
+    private Boolean cacheEnabled;
 
     public String getBaseUrl() {
         return baseUrl;
@@ -22,5 +23,13 @@ public class ApplicationProperties {
 
     public void setBucketName(String bucketName) {
         this.bucketName = bucketName;
+    }
+
+    public Boolean isCacheEnabled() {
+        return cacheEnabled;
+    }
+
+    public void setCacheEnabled(Boolean cacheEnabled) {
+        this.cacheEnabled = cacheEnabled;
     }
 }

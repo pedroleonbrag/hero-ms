@@ -27,65 +27,11 @@ springdoc:
 feign:
   circuitbreaker:
     enabled: true
-  # client:
-  #   config:
-  #     default:
-  #       connectTimeout: 5000
-  #       readTimeout: 5000
-management:
-  endpoints:
-    web:
-      base-path: /management
-      exposure:
-        include:
-          - configprops
-          - env
-          - health
-          - info
-          - jhimetrics
-          - jhiopenapigroups
-          - logfile
-          - loggers
-          - prometheus
-          - threaddump
-          - liquibase
-  endpoint:
-    health:
-      show-details: when_authorized
-      roles: 'ROLE_ADMIN'
-      probes:
-        enabled: true
-      group:
-        liveness:
-          include: livenessState
-        readiness:
-          include: readinessState,db
-    jhimetrics:
-      enabled: true
-  info:
-    git:
-      mode: full
-    env:
-      enabled: true
-  health:
-    mail:
-      enabled: false # When using the MailService, configure an SMTP server and set this to true
-  prometheus:
-    metrics:
-      export:
-        enabled: true
-        step: 60
-    enable:
-      http: true
-      jvm: true
-      logback: true
-      process: true
-      system: true
-    distribution:
-      percentiles-histogram:
-        all: true
-      percentiles:
-        all: 0, 0.5, 0.75, 0.95, 0.99, 1.0
+    # client:
+    #   config:
+    #     default:
+    #       connectTimeout: 5000
+    #       readTimeout: 5000
     tags:
       application: ${spring.application.name}
     web:
@@ -107,8 +53,11 @@ cloud:
 application:
   bucketName: heros-images
   baseUrl: https://heros-images.s3.us-east-2.amazonaws.com/
+  cacheEnabled: false
 
 spring:
+  cache:
+    type: none
   application:
     name: microservicio
   profiles:
@@ -155,19 +104,6 @@ spring:
   mvc:
     problemdetails:
       enabled: true
-  task:
-    execution:
-      thread-name-prefix: microservicio-task-
-      pool:
-        core-size: 2
-        max-size: 50
-        queue-capacity: 10000
-    scheduling:
-      thread-name-prefix: microservicio-scheduling-
-      pool:
-        size: 2
-  thymeleaf:
-    mode: HTML
   output:
     ansi:
       console-available: true

@@ -534,8 +534,8 @@
                         <artifactId>git-commit-id-maven-plugin</artifactId>
                     </plugin>
                 </plugins>
+                <finalName>hero-ms</finalName>
             </build>
         </profile>
-       
     </profiles>
 </project>
