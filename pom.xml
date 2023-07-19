@@ -11,10 +11,6 @@
     <description>Description for Microservicio</description>
 
     <properties>
-        <!--
-            Build properties
-            The spring-boot version should match the one managed by https://mvnrepository.com/artifact/tech.jhipster/jhipster-dependencies/${jhipster-dependencies.version}
-        -->
         <java.version>11</java.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
@@ -53,12 +49,7 @@
         <maven-war-plugin.version>3.3.2</maven-war-plugin.version>
         <modernizer-maven-plugin.version>2.5.0</modernizer-maven-plugin.version>
         <nohttp-checkstyle.version>0.0.11</nohttp-checkstyle.version>
-        <profile.e2e/>
-        <profile.no-liquibase/>
-        <profile.test/>
-        <profile.tls/>
         <properties-maven-plugin.version>1.1.0</properties-maven-plugin.version>
-        <sonar-maven-plugin.version>3.9.1.2184</sonar-maven-plugin.version>
         <validation-api.version>3.0.2.Final</validation-api.version>
         <lombok.version>1.18.20</lombok.version>
     </properties>
@@ -380,7 +371,6 @@
             <properties>
                 <!-- default Spring profiles -->
                 <spring.profiles.active>prod</spring.profiles.active>
-                <profile.test>testprod</profile.test>
                 <skipTests>true</skipTests>
             </properties>
             <build>
