@@ -87,9 +87,12 @@ public class ExceptionTranslator extends ResponseEntityExceptionHandler {
     }
 
     private ProblemDetailWithCause getProblemDetailWithCause(Throwable ex) {
-        if (
-            ex instanceof ErrorResponseException exp && exp.getBody() instanceof ProblemDetailWithCause
-        ) return (ProblemDetailWithCause) exp.getBody();
+        //        if (ex instanceof ErrorResponseException && ()ex.getBody() instanceof ProblemDetailWithCause) {
+        //            ErrorResponseException exp = (ErrorResponseException) ex;
+        //            ProblemDetailWithCause body = (ProblemDetailWithCause) exp.getBody();
+        //            return (ProblemDetailWithCause) exp.getBody();
+        //        }
+
         return ProblemDetailWithCauseBuilder.instance().withStatus(toStatus(ex).value()).build();
     }
 
@@ -159,7 +162,10 @@ public class ExceptionTranslator extends ResponseEntityExceptionHandler {
 
     private HttpStatus toStatus(final Throwable throwable) {
         // Let the ErrorResponse take this responsibility
-        if (throwable instanceof ErrorResponse err) return HttpStatus.valueOf(err.getBody().getStatus());
+        if (throwable instanceof ErrorResponse) {
+            ErrorResponse err = (ErrorResponse) throwable;
+            return HttpStatus.valueOf(err.getBody().getStatus());
+        }
 
         return Optional
             .ofNullable(getMappedStatus(throwable))
@@ -178,7 +184,7 @@ public class ExceptionTranslator extends ResponseEntityExceptionHandler {
     }
 
     private URI getMappedType(Throwable err) {
-        if (err instanceof MethodArgumentNotValidException exp) return ErrorConstants.CONSTRAINT_VIOLATION_TYPE;
+        if (err instanceof MethodArgumentNotValidException) return ErrorConstants.CONSTRAINT_VIOLATION_TYPE;
         return ErrorConstants.DEFAULT_TYPE;
     }
 
@@ -190,7 +196,7 @@ public class ExceptionTranslator extends ResponseEntityExceptionHandler {
     }
 
     private String getCustomizedTitle(Throwable err) {
-        if (err instanceof MethodArgumentNotValidException exp) return "Method argument not valid";
+        if (err instanceof MethodArgumentNotValidException) return "Method argument not valid";
         return null;
     }
 

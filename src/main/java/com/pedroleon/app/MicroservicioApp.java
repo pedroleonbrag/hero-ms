@@ -86,14 +86,13 @@ public class MicroservicioApp {
         }
         log.info(
             CRLFLogConverter.CRLF_SAFE_MARKER,
-            """
-
-                ----------------------------------------------------------
-                \tApplication '{}' is running! Access URLs:
-                \tLocal: \t\t{}://localhost:{}{}
-                \tExternal: \t{}://{}:{}{}
-                \tProfile(s): \t{}
-                ----------------------------------------------------------""",
+            "\n" +
+            "----------------------------------------------------------\n" +
+            "\tApplication '{}' is running! Access URLs:\n" +
+            "\tLocal: \t\t{}://localhost:{}{}\n" +
+            "\tExternal: \t{}://{}:{}{}\n" +
+            "\tProfile(s): \t{}\n" +
+            "----------------------------------------------------------",
             env.getProperty("spring.application.name"),
             protocol,
             serverPort,
