@@ -9,6 +9,8 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
+
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.env.Environment;
@@ -147,7 +149,7 @@ public class ExceptionTranslator extends ResponseEntityExceptionHandler {
                     StringUtils.isNotBlank(f.getDefaultMessage()) ? f.getDefaultMessage() : f.getCode()
                 )
             )
-            .toList();
+            .collect(Collectors.toList());
     }
 
     private String extractTitleForResponseStatus(Throwable err, int statusCode) {
