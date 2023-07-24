@@ -43,8 +43,8 @@ feign:
 cloud:
   aws:
     credentials:
-      access-key: AKIATVHTSMWWXSQUQAPS
-      secret-key: 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
+      access-key: **
+      secret-key: **
     region:
       static: us-east-2
     stack:
