@@ -3,15 +3,10 @@ package com.pedroleon.app.web.rest.controllers;
 import static com.pedroleon.app.security.SecurityUtils.AUTHORITIES_KEY;
 import static com.pedroleon.app.security.SecurityUtils.JWT_ALGORITHM;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.pedroleon.app.domain.LoginVM;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.validation.Valid;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.stream.Collectors;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -31,14 +26,18 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-/**
- * Controller to authenticate users.
- */
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.pedroleon.app.domain.LoginVM;
+import com.pedroleon.app.service.UserService;
+import com.pedroleon.app.web.rest.dto.UserDTO;
+
+import jakarta.validation.Valid;
+
 @RestController
 @RequestMapping("/api")
 public class AuthController {
 
-    private final Logger log = LoggerFactory.getLogger(AuthController.class);
+    //private final Logger log = LoggerFactory.getLogger(AuthController.class);
 
     private final JwtEncoder jwtEncoder;
 
@@ -49,14 +48,17 @@ public class AuthController {
     private long tokenValidityInSecondsForRememberMe;
 
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
+    
+    private UserService userService;
 
-    public AuthController(JwtEncoder jwtEncoder, AuthenticationManagerBuilder authenticationManagerBuilder) {
+    public AuthController(JwtEncoder jwtEncoder, AuthenticationManagerBuilder authenticationManagerBuilder, UserService userService) {
         this.jwtEncoder = jwtEncoder;
         this.authenticationManagerBuilder = authenticationManagerBuilder;
+        this.userService = userService;
     }
 
     @PostMapping("/authenticate")
-    public ResponseEntity<JWTToken> authorize(@Valid @RequestBody LoginVM loginVM) {
+    public ResponseEntity<JWTToken> authenticate(@Valid @RequestBody LoginVM loginVM) {
         UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
             loginVM.getUsername(),
             loginVM.getPassword()
@@ -69,38 +71,21 @@ public class AuthController {
         httpHeaders.setBearerAuth(jwt);
         return new ResponseEntity<>(new JWTToken(jwt), httpHeaders, HttpStatus.OK);
     }
-
-    /**
-     * {@code GET /authenticate} : check if the user is authenticated, and return its login.
-     *
-     * @param request the HTTP request.
-     * @return the login if the user is authenticated.
-     */
-    @GetMapping("/authenticate")
-    public String isAuthenticated(HttpServletRequest request) {
-        log.debug("REST request to check if the current user is authenticated");
-        return request.getRemoteUser();
+    
+    @PostMapping("/register")
+    public ResponseEntity<UserDTO> register(@RequestBody UserDTO user) {
+    	
+		if (userService.findByUsername(user.getUsername()) != null) {
+			return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+		}
+    	userService.registerUser(user);
+        return new ResponseEntity<>(user, HttpStatus.OK);
     }
 
     @GetMapping("/hello")
     public String hello() {
         return "Hi!";
     }
-
-    //    @PostMapping("/register")
-    //	public ResponseEntity<String> register(@RequestBody RegisterDTO registerDTO) {
-    //
-    //		if (userRepository.existsByUsername(registerDTO.username())) {
-    //			return new ResponseEntity<>("User alredy exists", HttpStatus.BAD_REQUEST);
-    //		}
-    //		UserEntity user = new UserEntity();
-    //		user.setUsername(registerDTO.username());
-    //		user.setPassword(passwordEncoder.encode(registerDTO.password()));
-    //		Role role = roleRepository.findByName("USER").get();
-    //		user.setRoles(Collections.singletonList(role));
-    //		userRepository.save(user);
-    //		return new ResponseEntity<>("Successfully registered", HttpStatus.OK);
-    //	}
 
     public String createToken(Authentication authentication, boolean rememberMe) {
         String authorities = authentication.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.joining(" "));
@@ -113,7 +98,6 @@ public class AuthController {
             validity = now.plus(this.tokenValidityInSeconds, ChronoUnit.SECONDS);
         }
 
-        // @formatter:off
         JwtClaimsSet claims = JwtClaimsSet.builder()
             .issuedAt(now)
             .expiresAt(validity)
@@ -125,9 +109,7 @@ public class AuthController {
         return this.jwtEncoder.encode(JwtEncoderParameters.from(jwsHeader, claims)).getTokenValue();
     }
 
-    /**
-     * Object to return as body in JWT Authentication.
-     */
+
     static class JWTToken {
 
         private String idToken;

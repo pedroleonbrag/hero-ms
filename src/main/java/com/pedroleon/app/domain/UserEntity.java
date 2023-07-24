@@ -30,6 +30,7 @@ public class UserEntity {
     @Column(name = "id")
     private Long id;
 
+    @Column(unique = true, nullable = false)
     private String username;
     private String password;
 
@@ -41,7 +42,9 @@ public class UserEntity {
     )
     private List<Role> roles = new ArrayList<>();
 
-    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinColumn(name = "team_id", referencedColumnName = "id")
     private Team team;
+    
+    
 }

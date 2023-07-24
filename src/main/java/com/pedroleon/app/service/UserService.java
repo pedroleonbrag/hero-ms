@@ -1,9 +1,12 @@
 package com.pedroleon.app.service;
 
 import com.pedroleon.app.domain.UserEntity;
-import java.util.Optional;
+import com.pedroleon.app.web.rest.dto.UserDTO;
 
 public interface UserService {
-    UserEntity save(UserEntity user);
-    Optional<UserEntity> findByUsername(String string);
+	UserEntity save(UserEntity user);
+
+	UserEntity findByUsername(String string);
+
+	UserEntity registerUser(UserDTO user);
 }

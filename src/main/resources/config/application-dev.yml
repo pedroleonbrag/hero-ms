@@ -31,13 +31,10 @@ spring:
     serialization:
       indent-output: true
   datasource:
-    type: com.zaxxer.hikari.HikariDataSource
-    url: jdbc:mysql://localhost:3306/microservicio?useUnicode=true&characterEncoding=utf8&useSSL=false&useLegacyDatetimeCode=false&serverTimezone=UTC&createDatabaseIfNotExist=true
+    #type: com.zaxxer.hikari.HikariDataSource
+    url: jdbc:mysql://localhost:3306/*****
     username: root
-    password: Burbuja$/
-    #url: jdbc:mysql://hero-ms.cet7cdyghf5u.us-east-2.rds.amazonaws.com:3306/hero-ms-db?useUnicode=true&characterEncoding=utf8&useSSL=false&useLegacyDatetimeCode=false&serverTimezone=UTC&createDatabaseIfNotExist=true
-    #username: root
-    #password: Lettuce$
+    password: *****
     hikari:
       poolName: Hikari
       auto-commit: false
@@ -72,7 +69,7 @@ server:
   port: 8080
 
 application:
-  cacheEnabled: false
+  cacheEnabled: true
 
 jhipster:
   cache:

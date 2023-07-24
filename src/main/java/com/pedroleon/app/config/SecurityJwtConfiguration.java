@@ -5,7 +5,6 @@ import static com.pedroleon.app.security.SecurityUtils.JWT_ALGORITHM;
 
 import com.nimbusds.jose.jwk.source.ImmutableSecret;
 import com.nimbusds.jose.util.Base64;
-import com.pedroleon.app.management.SecurityMetersService;
 import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
 import org.springframework.beans.factory.annotation.Value;
@@ -25,20 +24,16 @@ public class SecurityJwtConfiguration {
     private String jwtKey;
 
     @Bean
-    public JwtDecoder jwtDecoder(SecurityMetersService metersService) {
+    public JwtDecoder jwtDecoder( ) {
         NimbusJwtDecoder jwtDecoder = NimbusJwtDecoder.withSecretKey(getSecretKey()).macAlgorithm(JWT_ALGORITHM).build();
         return token -> {
             try {
                 return jwtDecoder.decode(token);
             } catch (Exception e) {
                 if (e.getMessage().contains("Invalid signature")) {
-                    metersService.trackTokenInvalidSignature();
                 } else if (e.getMessage().contains("Jwt expired at")) {
-                    metersService.trackTokenExpired();
                 } else if (e.getMessage().contains("Invalid JWT serialization")) {
-                    metersService.trackTokenMalformed();
                 } else if (e.getMessage().contains("Invalid unsecured/JWS/JWE")) {
-                    metersService.trackTokenMalformed();
                 }
                 throw e;
             }
